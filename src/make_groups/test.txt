@@ -1,0 +1,17 @@
+    String[] students = {  // dummy name-list
+	"Wechsler, Melanie",
+	"Bar, Leon",
+	"Drescher, Frank",
+	"Lehrer, Ursula",
+	"Schneider, Anke",
+	"Duerr, Wolfgang",
+	"Sommer, Kevin",
+	"Hertz, Martin",
+	"Mueller, Erik",
+	"Shuster, René",
+	"Richter, Bernd",
+	"Vogler, Mandy",
+	"Ziegler, Uwe",
+	"Brauer, Ines",
+	"Wagner, Torsten",
+	"Richter, Lea" };
