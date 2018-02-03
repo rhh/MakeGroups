@@ -7,7 +7,7 @@
 	"Duerr, Wolfgang",
 	"Sommer, Kevin",
 	"Hertz, Martin",
-	"Mueller, Erik",
+	"Müller, Erik",
 	"Shuster, René",
 	"Richter, Bernd",
 	"Vogler, Mandy",

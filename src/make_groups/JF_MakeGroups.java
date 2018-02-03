@@ -99,20 +99,25 @@ public class JF_MakeGroups extends javax.swing.JFrame {
     private void btnRandom1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRandom1ActionPerformed
         //Textfile mit Namensliste auswählen
         JFileChooser chooser = new JFileChooser();
+        // basedir des filechoosers einstellen
+        chooser.setCurrentDirectory(new File("src/data"));
         // Dialog zum Oeffnen von Dateien anzeigen
         chooser.showDialog(null, "Gruppe laden");
 
         try {
             File myGroup_File = chooser.getSelectedFile();
-            if (myGroup_File==null ){
-                warningMessage("Keine Datei ausgewählt.");                
-            }else if (myGroup_File.getName().contains(".txt")) {
+            if (myGroup_File == null) {
+                warningMessage("Keine Datei ausgewählt.");
+            } else if (myGroup_File.getName().contains(".txt")) {
                 this.readStudents(myGroup_File);
-            }else {
+            } else {
                 warningMessage("Bitte wählen Sie eine .txt Datei aus.");
             }
         } catch (IOException ex) {
-             Logger.getLogger(JF_MakeGroups.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JF_MakeGroups.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NumberFormatException ex) {
+            Logger.getLogger(JF_MakeGroups.class.getName()).log(Level.SEVERE, null, ex);
+            
         }
     }//GEN-LAST:event_btnRandom1ActionPerformed
 
@@ -139,9 +144,6 @@ public class JF_MakeGroups extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(JF_MakeGroups.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -163,9 +165,14 @@ public class JF_MakeGroups extends javax.swing.JFrame {
     private void createTable(String text, boolean first_load) {
         Object[][] membership;
         String[] header;
-        int table_width_factor=1;
-        
-        int noGroups = Integer.parseInt(text);
+        int table_width_factor = 2;
+        int noGroups = 1;
+        try {
+            int parsedText = Integer.parseInt(text);
+            noGroups = (parsedText > 0) ? parsedText : 1;
+        } catch (NumberFormatException ex) {
+            Logger.getLogger(JF_MakeGroups.class.getName()).log(Level.WARNING, null, ex);
+        }
         int membersPerGroup = students.size() / noGroups;
         // compensation of unequal grouplength
         if (students.size() % noGroups > 0) {
@@ -174,7 +181,7 @@ public class JF_MakeGroups extends javax.swing.JFrame {
 
         //Nur bei ersten Laden der Schülergruppe anwesend oder nicht mit einbauen
         if (first_load) {
-            table_width_factor=2;
+            table_width_factor = 2;
             header = new String[]{"Schüler", "anwesend"};
             membership = new Object[membersPerGroup][2];
             // initialize gStudents-array
@@ -182,8 +189,8 @@ public class JF_MakeGroups extends javax.swing.JFrame {
                 membership[mCount][0] = students.get(i++);
                 membership[mCount][1] = true;
             }
-            
-                 DefaultTableModel model = new DefaultTableModel(membership, header);
+
+            DefaultTableModel model = new DefaultTableModel(membership, header);
             //Anwesend Klick beobachten
             model.addTableModelListener(new TableModelListener() {
                 public void tableChanged(TableModelEvent tme) {
@@ -194,7 +201,7 @@ public class JF_MakeGroups extends javax.swing.JFrame {
                             if (result == JOptionPane.YES_OPTION) {
                                 students.remove(tme.getFirstRow());
                                 createTable("1", true);
-                            } 
+                            }
                         }
 
                     }
@@ -217,7 +224,6 @@ public class JF_MakeGroups extends javax.swing.JFrame {
 
             };
 
-
         } else {
             shuffle(students);
             membership = new Object[membersPerGroup][noGroups];
@@ -239,18 +245,17 @@ public class JF_MakeGroups extends javax.swing.JFrame {
             for (int i = 0; i < noGroups; i++) {
                 header[i] = Integer.toString(i + 1);
             }
-            
-            
+
             tblGroups = new JTable();
             tblGroups.setModel(new javax.swing.table.DefaultTableModel(
                     membership, header
             ));
         }
-   
+
         // quick and dirty...
         int tableWidth = noGroups * 150;
         int tableHeight = 50 + membersPerGroup * 20;
-        jspGroups.setBounds(40, 110, tableWidth*table_width_factor, tableHeight);
+        jspGroups.setBounds(40, 110, tableWidth * table_width_factor, tableHeight);
         this.setBounds(this.getBounds().x, this.getBounds().y, 100 + tableWidth, 200 + tableHeight);
         jspGroups.setViewportView(tblGroups);
         this.repaint();
