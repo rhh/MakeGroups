@@ -30,11 +30,11 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Tahoma" size="13" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Anzahl der Gruppenmitglieder"/>
+        <Property name="text" type="java.lang.String" value="Number of groups:"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="40" y="47" width="-1" height="-1"/>
+          <AbsoluteConstraints x="50" y="50" width="140" height="-1"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -45,7 +45,7 @@
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="240" y="40" width="39" height="30"/>
+          <AbsoluteConstraints x="190" y="40" width="39" height="30"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -65,15 +65,15 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JButton" name="btnRandom1">
+    <Component class="javax.swing.JButton" name="btnLoadFile">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Tahoma" size="13" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Gruppe laden"/>
+        <Property name="text" type="java.lang.String" value="Load Class"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRandom1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLoadFileActionPerformed"/>
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
