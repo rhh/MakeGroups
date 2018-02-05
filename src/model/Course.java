@@ -1,4 +1,4 @@
-package make_groups;
+package model;
 
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.io.BufferedReader;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Model {
+public class Course {
 
     List<Student> students = new ArrayList<>();
 

@@ -1,4 +1,4 @@
-package make_groups;
+package model;
 
 import java.util.Objects;
 
