@@ -7,16 +7,14 @@ import java.util.*;
 import java.io.*;
 import java.util.logging.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.DefaultTableModel;
 
 // todo:
 // - Anzahl Gruppenmitglieder <-> Anzahl Gruppen
 // - createTable überarbeiten...
 public class JF_Groups extends javax.swing.JFrame {
 
-    Course myClassRoom = new Course();        // Modell
-    Controller ctrl = new Controller(myClassRoom);
+    
+    Controller ctrl = new Controller(new Course());     // everthing starts here
 
     private javax.swing.JScrollPane jspGroups;
     private javax.swing.JTable tblGroups;
@@ -31,7 +29,7 @@ public class JF_Groups extends javax.swing.JFrame {
         jspGroups.setViewportView(tblGroups);
         getContentPane().add(jspGroups);
 
-        this.setBounds(100, 100, 300, 200);
+        this.setBounds(100, 100, 450, 200);
         this.setTitle("Gruppenaufteilung");
     }
 
@@ -39,9 +37,10 @@ public class JF_Groups extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
         txtNoMembersPerGroup = new javax.swing.JTextField();
-        btnRandom = new javax.swing.JButton();
+        jlNoGroups = new javax.swing.JLabel();
+        btnSplit = new javax.swing.JButton();
+        cbShuffle = new javax.swing.JCheckBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jmiLoadFile = new javax.swing.JMenuItem();
@@ -49,27 +48,22 @@ public class JF_Groups extends javax.swing.JFrame {
         jmiEditCourse = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(null);
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        jLabel1.setText("Number of groups:");
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(20, 40, 140, 16);
 
         txtNoMembersPerGroup.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtNoMembersPerGroup.setText("3");
-        getContentPane().add(txtNoMembersPerGroup);
-        txtNoMembersPerGroup.setBounds(160, 30, 39, 30);
 
-        btnRandom.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        btnRandom.setText("Random!");
-        btnRandom.addActionListener(new java.awt.event.ActionListener() {
+        jlNoGroups.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jlNoGroups.setText("Number of groups:");
+
+        btnSplit.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        btnSplit.setText("Split!");
+        btnSplit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRandomActionPerformed(evt);
+                btnSplitActionPerformed(evt);
             }
         });
-        getContentPane().add(btnRandom);
-        btnRandom.setBounds(210, 30, 128, 25);
+
+        cbShuffle.setText("Shuffle?");
 
         jMenu1.setText("File");
 
@@ -99,19 +93,36 @@ public class JF_Groups extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jlNoGroups)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtNoMembersPerGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addComponent(cbShuffle)
+                .addGap(18, 18, 18)
+                .addComponent(btnSplit, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(44, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jlNoGroups)
+                    .addComponent(txtNoMembersPerGroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbShuffle)
+                    .addComponent(btnSplit))
+                .addContainerGap(72, Short.MAX_VALUE))
+        );
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
-    private void btnRandomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRandomActionPerformed
-        int noMembersPerGroup = Integer.parseInt(txtNoMembersPerGroup.getText()); // todo: error management missing...
-
-        if (myClassRoom.getNoActiveStudents() > 0) {
-            createGroupTable(txtNoMembersPerGroup.getText());
-        } else {
-            warningMessage("Bitte eine Gruppe laden.");
-        }
-    }//GEN-LAST:event_btnRandomActionPerformed
 
     private void jmiLoadFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiLoadFileActionPerformed
         JFileChooser chooser = new JFileChooser("src/data");
@@ -120,6 +131,7 @@ public class JF_Groups extends javax.swing.JFrame {
         try {
             File studentFile = chooser.getSelectedFile();
             ctrl.readStudentsFromFile(studentFile);
+            this.setTitle(ctrl.getCourseID());
             editCourse();
         } catch (IOException e) {
             // todo: error management missing...
@@ -128,33 +140,44 @@ public class JF_Groups extends javax.swing.JFrame {
     }//GEN-LAST:event_jmiLoadFileActionPerformed
 
     private void jmiEditCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiEditCourseActionPerformed
-        editCourse();        
+        editCourse();
     }//GEN-LAST:event_jmiEditCourseActionPerformed
 
-
-    private void editCourse(){
-        new JD_CourseEdit(this).setVisible(true);
-    }
-    
-    private void createGroupTable(String text) {
-        Object[][] displayData;
-        String[] header;
-        int table_width_factor = 1;
-        int noGroups = 1;
-        List<Student> activeStudents = myClassRoom.getActiveStudents();
+    private void btnSplitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSplitActionPerformed
+        int noGroups=0;
         try {
-            int parsedText = Integer.parseInt(text);
-            noGroups = (parsedText > 0) ? parsedText : 1;
+            noGroups = Integer.parseInt(txtNoMembersPerGroup.getText()); // todo: error management missing...
         } catch (NumberFormatException ex) {
             Logger.getLogger(JF_Groups.class.getName()).log(Level.WARNING, null, ex);
         }
+
+        if(cbShuffle.isSelected()){
+            ctrl.shuffleStudents();
+        }
+        
+        if (ctrl.getNoActiveStudents() > 0) {
+            createGroupTable(noGroups);
+        } else {
+            warningMessage("Bitte eine Gruppe laden!");
+        }
+    }//GEN-LAST:event_btnSplitActionPerformed
+
+    private void editCourse() {
+        new JD_CourseEdit(this).setVisible(true);
+    }
+
+    private void createGroupTable(int noGroups) {
+        Object[][] displayData;
+        String[] header;
+        int table_width_factor = 1;
+
+        List<Student> activeStudents = ctrl.getActiveStudents();
         int membersPerGroup = activeStudents.size() / noGroups;
         // compensation of unequal grouplength
         if (activeStudents.size() % noGroups > 0) {
             membersPerGroup++;
         }
 
-        myClassRoom.shuffleStudents();
         displayData = new Object[membersPerGroup][noGroups];
         // initialize gStudents-array
         for (int group = 0; group < noGroups; group++) {
@@ -192,46 +215,15 @@ public class JF_Groups extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, message);
     }
 
-    public static void main(String args[]) throws IOException {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JF_Groups.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JF_Groups.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JF_Groups.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JF_Groups.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                JF_Groups myGroups = new JF_Groups();
-                myGroups.setVisible(true);
-
-            }
-        });
-    }
+    // *** main() removed, to make view exchangable...
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnRandom;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnSplit;
+    private javax.swing.JCheckBox cbShuffle;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JLabel jlNoGroups;
     private javax.swing.JMenuItem jmiEditCourse;
     private javax.swing.JMenuItem jmiLoadFile;
     private javax.swing.JTextField txtNoMembersPerGroup;

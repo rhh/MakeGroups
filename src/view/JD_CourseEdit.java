@@ -7,12 +7,14 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import model.Student;
 
 public class JD_CourseEdit extends javax.swing.JDialog {
 
     Controller ctrl;
     private javax.swing.JScrollPane jspCourse;
     private javax.swing.JTable tblcourse;
+    private DefaultTableModel model;
 
     public JD_CourseEdit(JF_Groups owner) {
         super(owner, "Edit Course:", Dialog.ModalityType.DOCUMENT_MODAL); // MODAL!!!
@@ -34,34 +36,48 @@ public class JD_CourseEdit extends javax.swing.JDialog {
         pack();
     }
 
+    private void tableChangedEventHandler(TableModelEvent tme) {
+        Student lateStudent = null;
+
+        if (tme.getType() == TableModelEvent.UPDATE) {
+            
+            if ((boolean) model.getValueAt(tme.getFirstRow(), tme.getColumn())) {
+                lateStudent = ctrl.getStudent(tme.getFirstRow());
+                lateStudent.active = true;
+                ctrl.move2end(lateStudent);
+            } else {
+                ctrl.getStudent(tme.getFirstRow()).active = false;
+            }
+
+        }
+
+    }
+
     private void createSelectionTable() {
         Object[][] displayData;
         String[] header;
         int noStudents = ctrl.getNoStudents();
 
+        // prepare table heading
         header = new String[]{"Students:", "Active:"};
         displayData = new Object[noStudents][2];
 
+        // prepare table data
         for (int row = 0; row < noStudents; row++) {
             displayData[row][0] = ctrl.getStudent(row).name;
             displayData[row][1] = ctrl.getStudent(row).active;
         }
 
-        DefaultTableModel model = new DefaultTableModel(displayData, header);
+        // create table model from header + data
+        model = new DefaultTableModel(displayData, header);
         model.addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent tme) {
-                if (tme.getType() == TableModelEvent.UPDATE) {
-                    if ((boolean) model.getValueAt(tme.getFirstRow(), tme.getColumn())) {
-                        ctrl.getStudent(tme.getFirstRow()).active = true;
-                    } else {
-                        ctrl.getStudent(tme.getFirstRow()).active = false;
-                    }
-
-                }
+                tableChangedEventHandler(tme);
             }
 
         });
 
+        // create table from model
         tblcourse = new JTable(model) {
             private static final long serialVersionUID = 1L;
 

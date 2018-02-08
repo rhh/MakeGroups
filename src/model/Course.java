@@ -13,6 +13,15 @@ import java.util.Random;
 public class Course {
 
     List<Student> students = new ArrayList<>();
+    String courseID="";
+
+    public String getCourseID() {
+        return courseID;
+    }
+
+    public void setCourseID(String courseID) {
+        this.courseID = courseID;
+    }
 
     public void clearStudents() {
         students.clear();
@@ -65,4 +74,8 @@ public class Course {
         }
     }
 
+    public void move2end(Student s){
+        students.remove(s);
+        students.add(s);
+    }
 }
