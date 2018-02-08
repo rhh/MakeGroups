@@ -5,14 +5,14 @@ import controller.Controller;
 import model.Student;
 import java.util.*;
 import java.io.*;
+import java.net.URL;
 import java.util.logging.*;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
-// todo:
-// - Anzahl Gruppenmitglieder <-> Anzahl Gruppen
-// - createTable überarbeiten...
 public class JF_Groups extends javax.swing.JFrame {
 
+    String version = "MakeGroups v2.0";
     Controller ctrl = new Controller(new Course());     // everthing starts here
 
     private javax.swing.JScrollPane jspGroups;
@@ -29,13 +29,14 @@ public class JF_Groups extends javax.swing.JFrame {
         getContentPane().add(jspGroups);
 
         this.setBounds(100, 100, 450, 200);
-        this.setTitle("Gruppenaufteilung");
+        this.setTitle(version);
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jFileChooser1 = new javax.swing.JFileChooser();
         txtNoMembersPerGroup = new javax.swing.JTextField();
         jlNoGroups = new javax.swing.JLabel();
         btnSplit = new javax.swing.JButton();
@@ -124,14 +125,18 @@ public class JF_Groups extends javax.swing.JFrame {
 
 
     private void jmiLoadFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiLoadFileActionPerformed
-        JFileChooser chooser = new JFileChooser("src/data");
-        chooser.showDialog(null, "Gruppe laden");
+
+        JFileChooser chooser = new JFileChooser(new File("."));  // jar-file's directory...
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("MakeGroups: *.course", "course");
+        chooser.setFileFilter(filter);
+        chooser.showDialog(null, "Load Course");
 
         try {
             File studentFile = chooser.getSelectedFile();
             if (studentFile != null) {
                 ctrl.readStudentsFromFile(studentFile);
-                this.setTitle(ctrl.getCourseID());
+                this.setTitle(version + ": " + ctrl.getCourseID());
                 editCourse();
             }
         } catch (IOException e) {
@@ -221,6 +226,7 @@ public class JF_Groups extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSplit;
     private javax.swing.JCheckBox cbShuffle;
+    private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
