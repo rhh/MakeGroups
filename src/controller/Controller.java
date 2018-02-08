@@ -19,19 +19,21 @@ public class Controller {
 
     public void readStudentsFromFile(File studentFile) throws FileNotFoundException, IOException {
         String line, name;
-        
-        myCourse.clearStudents();
 
-        String fileName = studentFile.getName();
-        int fnExtensionStart = fileName.lastIndexOf(".");
-        myCourse.setCourseID(fileName.substring(0, fnExtensionStart));
-        
-        Scanner sc = new Scanner(studentFile);
-        while (sc.hasNextLine()) {
-            line = sc.nextLine();
-            if (line.contains("\"") && line.indexOf("\"") != line.lastIndexOf("\"")) {  // "..."
-                name = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));                
-                myCourse.addStudent(name, true);     // default: active
+        if (studentFile != null) {
+            myCourse.clearStudents();
+
+            String fileName = studentFile.getName();
+            int fnExtensionStart = fileName.lastIndexOf(".");
+            myCourse.setCourseID(fileName.substring(0, fnExtensionStart));
+
+            Scanner sc = new Scanner(studentFile);
+            while (sc.hasNextLine()) {
+                line = sc.nextLine();
+                if (line.contains("\"") && line.indexOf("\"") != line.lastIndexOf("\"")) {  // "..."
+                    name = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+                    myCourse.addStudent(name, true);     // default: active
+                }
             }
         }
     }
@@ -39,6 +41,7 @@ public class Controller {
     public int getNoStudents() {
         return myCourse.getNoStudents();
     }
+
     public int getNoActiveStudents() {
         return myCourse.getNoActiveStudents();
     }
@@ -46,23 +49,22 @@ public class Controller {
     public Student getStudent(int row) {
         return myCourse.getStudent(row);
     }
-    
+
     public List<Student> getActiveStudents() {
         return myCourse.getActiveStudents();
     }
-    
+
     public void shuffleStudents() {
         myCourse.shuffleStudents();
     }
 
-    public void move2end(Student s){
+    public void move2end(Student s) {
         myCourse.move2end(s);
     }
 
     public String getCourseID() {
         return myCourse.getCourseID();
     }
-
 
     public static void main(String args[]) throws IOException {
         /* Set the Nimbus look and feel */

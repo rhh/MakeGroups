@@ -13,7 +13,6 @@ import javax.swing.*;
 // - createTable überarbeiten...
 public class JF_Groups extends javax.swing.JFrame {
 
-    
     Controller ctrl = new Controller(new Course());     // everthing starts here
 
     private javax.swing.JScrollPane jspGroups;
@@ -130,9 +129,11 @@ public class JF_Groups extends javax.swing.JFrame {
 
         try {
             File studentFile = chooser.getSelectedFile();
-            ctrl.readStudentsFromFile(studentFile);
-            this.setTitle(ctrl.getCourseID());
-            editCourse();
+            if (studentFile != null) {
+                ctrl.readStudentsFromFile(studentFile);
+                this.setTitle(ctrl.getCourseID());
+                editCourse();
+            }
         } catch (IOException e) {
             // todo: error management missing...
         }
@@ -144,17 +145,17 @@ public class JF_Groups extends javax.swing.JFrame {
     }//GEN-LAST:event_jmiEditCourseActionPerformed
 
     private void btnSplitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSplitActionPerformed
-        int noGroups=0;
+        int noGroups = 0;
         try {
             noGroups = Integer.parseInt(txtNoMembersPerGroup.getText()); // todo: error management missing...
         } catch (NumberFormatException ex) {
             Logger.getLogger(JF_Groups.class.getName()).log(Level.WARNING, null, ex);
         }
 
-        if(cbShuffle.isSelected()){
+        if (cbShuffle.isSelected()) {
             ctrl.shuffleStudents();
         }
-        
+
         if (ctrl.getNoActiveStudents() > 0) {
             createGroupTable(noGroups);
         } else {

@@ -31,6 +31,7 @@ public class JD_CourseEdit extends javax.swing.JDialog {
         createSelectionTable();
         jspCourse.setViewportView(tblcourse);
 
+        this.setLocation(owner.getLocation().x+100,owner.getLocation().y +100);
         getContentPane().add(jspCourse, java.awt.BorderLayout.CENTER);
 
         pack();
