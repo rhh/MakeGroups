@@ -5,14 +5,13 @@ import controller.Controller;
 import model.Student;
 import java.util.*;
 import java.io.*;
-import java.net.URL;
 import java.util.logging.*;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class JF_Groups extends javax.swing.JFrame {
 
-    String version = "MakeGroups v2.0";
+    String version = "MakeGroups (v2.1)";
     Controller ctrl = new Controller(new Course());     // everthing starts here
 
     private javax.swing.JScrollPane jspGroups;
@@ -159,6 +158,7 @@ public class JF_Groups extends javax.swing.JFrame {
 
         if (cbShuffle.isSelected()) {
             ctrl.shuffleStudents();
+            cbShuffle.setSelected(false);  // automagically uncheck shuffle-checkbox...
         }
 
         if (ctrl.getNoActiveStudents() > 0) {

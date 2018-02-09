@@ -1,5 +1,5 @@
 # Groups
-Tool to make up spontanous workgroups based on studentlists. No. students per group can be selected.
+Tool to make up spontanous workgroups based on studentlists. No. groups can be selected.
 
 30jan17 (rhh) Initial version. Data represented by simple String-array, display by JTable (no. rows dynamically adjusted)
 23feb17 (ah)  Error hardening, student loading and absent student handling added
@@ -10,6 +10,10 @@ Tool to make up spontanous workgroups based on studentlists. No. students per gr
 	- course name added, 
 	- latecomers are moved to end of list (easier group integration!), 
 	- controller effectively is a presenter now...
+09feb18 (rhh) 
+	- cancel/ok buttons added to course-edit-dialog, 
+	- students now alphabetical sorted after import, 
+	- shuffle checkbox unchecked by split()
 
 
 
@@ -21,5 +25,7 @@ o GUI beautification...
 o MWP design	
   - consistent error handling missing
   - communication scheme -> publish & subscribe ? (too much effort?)
+  
+o change data-file format to ???
 
 o translation to PHP o.a. ???

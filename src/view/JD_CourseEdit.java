@@ -3,7 +3,9 @@ package view;
 import controller.Controller;
 import java.awt.BorderLayout;
 import java.awt.Dialog;
-import javax.swing.JTable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -15,6 +17,11 @@ public class JD_CourseEdit extends javax.swing.JDialog {
     private javax.swing.JScrollPane jspCourse;
     private javax.swing.JTable tblcourse;
     private DefaultTableModel model;
+    private JButton btnCancel;
+    private JButton btnSave;
+
+    List<Student> change2active = new ArrayList<>();
+    List<Student> change2inactive = new ArrayList<>();
 
     public JD_CourseEdit(JF_Groups owner) {
         super(owner, "Edit Course:", Dialog.ModalityType.DOCUMENT_MODAL); // MODAL!!!
@@ -31,27 +38,63 @@ public class JD_CourseEdit extends javax.swing.JDialog {
         createSelectionTable();
         jspCourse.setViewportView(tblcourse);
 
-        this.setLocation(owner.getLocation().x+100,owner.getLocation().y +100);
+        this.setLocation(owner.getLocation().x + 100, owner.getLocation().y + 100);
         getContentPane().add(jspCourse, java.awt.BorderLayout.CENTER);
+
+        // cancel / ok buttons
+        btnCancel = new JButton("Cancel?!");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelDialog();
+            }
+        });
+
+        btnSave = new JButton("Save!");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveAndExitDialog();
+            }
+
+        });
+
+        JPanel panel = new JPanel(); //Flow layout by default
+        //If you want to anchor the buttons to the right you might try
+        //panel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        panel.add(btnSave);
+        panel.add(btnCancel);
+        getContentPane().add(panel, java.awt.BorderLayout.SOUTH);
 
         pack();
     }
 
+    private void saveAndExitDialog() {
+        for (Student s : change2active) {
+            s.active = true;
+            ctrl.move2end(s);
+        }
+        for (Student s : change2inactive) {
+            s.active = false;
+        }
+        this.dispose();
+    }
+
+    private void cancelDialog() {
+        this.dispose();
+    }
+
     private void tableChangedEventHandler(TableModelEvent tme) {
-        Student lateStudent = null;
+        Student changedStudent = null;
+        boolean willBeActive;
 
         if (tme.getType() == TableModelEvent.UPDATE) {
-            
-            if ((boolean) model.getValueAt(tme.getFirstRow(), tme.getColumn())) {
-                lateStudent = ctrl.getStudent(tme.getFirstRow());
-                lateStudent.active = true;
-                ctrl.move2end(lateStudent);
+            changedStudent = ctrl.getStudent(tme.getFirstRow());
+            willBeActive = (boolean) model.getValueAt(tme.getFirstRow(), tme.getColumn());
+            if (willBeActive) {
+                change2active.add(changedStudent);
             } else {
-                ctrl.getStudent(tme.getFirstRow()).active = false;
+                change2inactive.add(changedStudent);
             }
-
         }
-
     }
 
     private void createSelectionTable() {

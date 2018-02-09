@@ -1,12 +1,7 @@
 package model;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -77,5 +72,9 @@ public class Course {
     public void move2end(Student s){
         students.remove(s);
         students.add(s);
+    }
+    
+    public void sortStudents(){
+        Collections.sort(students);
     }
 }

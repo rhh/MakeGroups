@@ -35,6 +35,7 @@ public class Controller {
                     myCourse.addStudent(name, true);     // default: active
                 }
             }
+            myCourse.sortStudents();
         }
     }
 
